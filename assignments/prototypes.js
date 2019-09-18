@@ -81,9 +81,12 @@ function Hero(good) {
 
 Hero.prototype = Object.create(Humanoid.prototype);
 
-Hero.prototype.attack = function(Object_Humanoid) {
-  return `${this.name} hit with ${this.weapons} for 10 health points!`;
+Hero.prototype.attack = function(target) {
+  return target.healthPoints - 2;
+  // return `${hero.name} hit with ${hero.weapons} for 10 health points!`;
 };
+
+
 
 const hero = new Hero({
   createdAt: new Date(),
@@ -164,7 +167,9 @@ const hero = new Hero({
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-  console.log(hero.attack());
+  
+  
+  console.log(hero.attack(mage));
 
 
   // Stretch task: 
