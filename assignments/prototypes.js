@@ -16,15 +16,14 @@
   * destroy() // prototype method that returns: `${this.name} was removed from the game.`
 */
 function GameObject(attributes) {
-  this.newCreatedAt = attributes.createdAt,
-  this.newName = attributes.name,
-  this.newDimensions = attributes.dimensiions,
-  console.log(this);
+  this.createdAt = attributes.createdAt,
+  this.name = attributes.name,
+  this.dimensions = attributes.dimensions
 }
 
 GameObject.prototype.destroy = function() {
-  return `${this.name} was removed from the game.`
-}
+  return `${this.name} was removed from the game.`;
+};
 
 
 /*
@@ -33,14 +32,16 @@ GameObject.prototype.destroy = function() {
   * takeDamage() // prototype method -> returns the string '<object name> took damage.'
   * should inherit destroy() from GameObject's prototype
 */
-function CharacterStats(attributes) {
-  this.newHealthPoints = attributes.healthPoints,
-  console.log(this);
+function CharacterStats(stats) {
+  GameObject.call(this, stats);
+  this.healthPoints = stats.healthPoints
 }
+
+CharacterStats.prototype = Object.create(GameObject.prototype);
 
 CharacterStats.prototype.takeDamage = function() {
   return `${this.name} took damage.`;
-}
+};
 
 
 /*
@@ -52,15 +53,18 @@ CharacterStats.prototype.takeDamage = function() {
   * should inherit destroy() from GameObject through CharacterStats
   * should inherit takeDamage() from CharacterStats
 */
-function Humanoid(attributes) {
-  this.newTeam = attributes.team,
-  this.newWeapons = attributes.weapons,
-  this.newLanguage = attributes.language
+function Humanoid(appearance) {
+  CharacterStats.call(this, appearance);
+  this.team = appearance.team,
+  this.weapons = appearance.weapons,
+  this.language = appearance.language
 }
+
+Humanoid.prototype = Object.create(CharacterStats.prototype);
 
 Humanoid.prototype.greet = function() {
   return `${this.name} offers a greeting in ${this.language}.`;
-}
+};
 
 
 /*
@@ -70,7 +74,32 @@ Humanoid.prototype.greet = function() {
 */
 
 
+// === Hero (stretch) ===
+function Hero(good) {
+  Humanoid.call(this, good);
+}
 
+Hero.prototype = Object.create(Humanoid.prototype);
+
+Hero.prototype.attack = function(Object_Humanoid) {
+  return `${this.name} hit with ${this.weapons} for 10 health points!`;
+};
+
+const hero = new Hero({
+  createdAt: new Date(),
+  dimensions: {
+    length: 4,
+    width: 2,
+    height: 2,
+  },
+  healthPoints: 50,
+  name: 'Jon Snow',
+  team: 'Castle Black',
+  weapons: [
+    'Longclaw',
+  ],
+  language: 'Common Tongue',
+});
 
 
 // Test you work by un-commenting these 3 objects and the list of console logs below:
@@ -135,6 +164,7 @@ Humanoid.prototype.greet = function() {
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
+  console.log(hero.attack());
 
 
   // Stretch task: 
